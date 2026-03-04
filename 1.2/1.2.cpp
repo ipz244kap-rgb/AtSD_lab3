@@ -1,9 +1,15 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <Windows.h>
 
-#define REPEATS 10000
+#define MAX_RANDOM_VALUE 10000
+#define REPEATS_COUNT 10000
+
+void fillArrayWithRandom(int arr[], int n) {
+    for (int i = 0; i < n; i++)
+        arr[i] = rand() % MAX_RANDOM_VALUE;
+}
 
 void insertionSort(int arr[], int n) {
     for (int i = 1; i < n; i++) {
@@ -17,32 +23,31 @@ void insertionSort(int arr[], int n) {
     }
 }
 
-void fillRandom(int arr[], int n) {
-    for (int i = 0; i < n; i++)
-        arr[i] = rand() % 10000;
-}
-
 int main() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
-    int sizes[] = { 100, 1000, 10000 };
-    srand(time(NULL));
 
-    for (int s = 0; s < 3; s++) {
+    int sizes[] = { 100, 1000, 10000 };
+    int numSizes = sizeof(sizes) / sizeof(sizes[0]); 
+    srand((unsigned int)time(NULL));
+
+    for (int s = 0; s < numSizes; s++) {
         int n = sizes[s];
+
         int* arr = (int*)malloc(n * sizeof(int));
         int* temp = (int*)malloc(n * sizeof(int));
 
-        if (!arr || !temp) {
-            printf("Ïîìèëêà âèä³ëåííÿ ïàì'ÿò³!\n");
+        if (arr == NULL || temp == NULL) {
+            printf("ÐŸÐ¾Ð¼Ð¸Ð»ÐºÐ°: Ð½Ðµ Ð²Ð´Ð°Ð»Ð¾ÑÑ Ð²Ð¸Ð´Ñ–Ð»Ð¸Ñ‚Ð¸ Ð¿Ð°Ð¼'ÑÑ‚ÑŒ!\n");
             return 1;
         }
 
         double totalTime = 0;
-        int repeats = (n == 10000) ? 1 : REPEATS;
+        int repeats = (n == 10000) ? 1 : REPEATS_COUNT;
 
         for (int r = 0; r < repeats; r++) {
-            fillRandom(arr, n);
+            fillArrayWithRandom(arr, n);
+
             for (int i = 0; i < n; i++)
                 temp[i] = arr[i];
 
@@ -53,7 +58,7 @@ int main() {
             totalTime += (double)(end - start) / CLOCKS_PER_SEC * 1000;
         }
 
-        printf("Ñîðòóâàííÿ âñòàâêàìè: %d åëåìåíò³â — %.5f ìñ\n", n, totalTime / repeats);
+        printf("Ð¡Ð¾Ñ€Ñ‚ÑƒÐ²Ð°Ð½Ð½Ñ Ð²ÑÑ‚Ð°Ð²ÐºÐ°Ð¼Ð¸: %d ÐµÐ»ÐµÐ¼ÐµÐ½Ñ‚Ñ–Ð² â€” %.5f Ð¼Ñ\n", n, totalTime / repeats);
 
         free(arr);
         free(temp);
